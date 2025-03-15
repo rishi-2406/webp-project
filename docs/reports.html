@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports & Analytics | FinTrack - Personal Finance Manager</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/reports.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <!-- Chart.js for visualizations -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- jsPDF for exporting reports -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="icon" href="../assets/images/icon.jpeg" type="image/png">
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <div class="logo">
+          <h1>FinTrack</h1>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+          </li>
+          <li>
+            <a href="transactions.html"
+              ><i class="fas fa-exchange-alt"></i> Transactions</a
+            >
+          </li>
+          <li>
+            <a href="budget.html"><i class="fas fa-chart-pie"></i> Budget</a>
+          </li>
+          <li class="active">
+            <a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a>
+          </li>
+          <li>
+            <a href="goals.html"><i class="fas fa-bullseye"></i> Goals</a>
+          </li>
+          <li>
+            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <p>&copy; 2025 FinTrack</p>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="page-header">
+          <h2>Reports & Analytics</h2>
+          <div class="date-display">
+            <span id="current-date">March 20, 2025</span>
+          </div>
+        </header>
+
+        <!-- Report Controls -->
+        <section class="report-controls">
+          <div class="time-period-selector">
+            <label for="report-period">Time Period:</label>
+            <select id="report-period" class="period-select">
+              <option value="month">This Month</option>
+              <option value="quarter">Last 3 Months</option>
+              <option value="halfyear">Last 6 Months</option>
+              <option value="year">This Year</option>
+              <option value="custom">Custom Range</option>
+            </select>
+
+            <div id="custom-date-range" class="custom-range hidden">
+              <div class="date-input-group">
+                <label for="date-from">From:</label>
+                <input type="date" id="date-from" class="date-input" />
+              </div>
+              <div class="date-input-group">
+                <label for="date-to">To:</label>
+                <input type="date" id="date-to" class="date-input" />
+              </div>
+            </div>
+
+            <button id="generate-report" class="btn primary">
+              Generate Report
+            </button>
+            <button id="export-report" class="btn secondary">
+              <i class="fas fa-download"></i> Export PDF
+            </button>
+          </div>
+        </section>
+
+        <!-- Report Content -->
+        <div id="report-content">
+          <!-- Financial Summary -->
+          <section class="financial-summary">
+            <h3 class="section-title">Financial Summary</h3>
+            <div class="summary-cards">
+              <div class="summary-card">
+                <div class="card-icon">
+                  <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Total Income</h4>
+                  <p class="amount income" id="summary-income">₹0.00</p>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <div class="card-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Total Expenses</h4>
+                  <p class="amount expense" id="summary-expenses">₹0.00</p>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <div class="card-icon">
+                  <i class="fas fa-wallet"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Net Savings</h4>
+                  <p class="amount" id="summary-savings">₹0.00</p>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <div class="card-icon">
+                  <i class="fas fa-piggy-bank"></i>
+                </div>
+                <div class="card-content">
+                  <h4>Savings Rate</h4>
+                  <p class="amount" id="summary-rate">0%</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Income vs Expenses -->
+          <section class="income-vs-expenses">
+            <h3 class="section-title">Income vs Expenses</h3>
+            <div class="chart-container">
+              <canvas id="income-expense-chart"></canvas>
+            </div>
+          </section>
+
+          <!-- Two Column Layout for Category and Trends -->
+          <div class="two-column-layout">
+            <!-- Spending by Category -->
+            <section class="spending-by-category">
+              <h3 class="section-title">Spending by Category</h3>
+              <div class="chart-container">
+                <canvas id="category-chart"></canvas>
+              </div>
+              <div class="category-legend" id="category-legend">
+                <!-- Category legend will be populated by JavaScript -->
+              </div>
+            </section>
+
+            <!-- Monthly Trends -->
+            <section class="monthly-trends">
+              <h3 class="section-title">Monthly Trends</h3>
+              <div class="chart-container">
+                <canvas id="trends-chart"></canvas>
+              </div>
+            </section>
+          </div>
+
+          <!-- Top Expenses -->
+          <section class="top-expenses">
+            <h3 class="section-title">Top Expenses</h3>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>% of Total</th>
+                    <th>Comparison</th>
+                  </tr>
+                </thead>
+                <tbody id="top-expenses-table">
+                  <!-- Top expenses will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Income Sources -->
+          <section class="income-sources">
+            <h3 class="section-title">Income Sources</h3>
+            <div class="chart-container">
+              <canvas id="income-sources-chart"></canvas>
+            </div>
+            <div class="table-container">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Source</th>
+                    <th>Amount</th>
+                    <th>% of Total</th>
+                  </tr>
+                </thead>
+                <tbody id="income-sources-table">
+                  <!-- Income sources will be populated by JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/reports.js"></script>
+    <script src="js/theme-loader.js"></script>
+  </body>
+</html>

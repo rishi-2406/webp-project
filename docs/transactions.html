@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transactions | FinTrack - Personal Finance Manager</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/transactions.css" />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="icon" href="../assets/images/icon.jpeg" type="image/png">
+  </head>
+  <body>
+    <div class="container">
+      <!-- Sidebar Navigation -->
+      <nav class="sidebar">
+        <div class="logo">
+          <h1>FinTrack</h1>
+        </div>
+        <ul class="nav-links">
+          <li>
+            <a href="index.html"><i class="fas fa-home"></i> Dashboard</a>
+          </li>
+          <li class="active">
+            <a href="transactions.html"
+              ><i class="fas fa-exchange-alt"></i> Transactions</a
+            >
+          </li>
+          <li>
+            <a href="budget.html"><i class="fas fa-chart-pie"></i> Budget</a>
+          </li>
+          <li>
+            <a href="reports.html"><i class="fas fa-chart-line"></i> Reports</a>
+          </li>
+          <li>
+            <a href="goals.html"><i class="fas fa-bullseye"></i> Goals</a>
+          </li>
+          <li>
+            <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <p>&copy; 2025 FinTrack</p>
+        </div>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="main-content">
+        <header class="page-header">
+          <h2>Transactions</h2>
+          <div class="date-display">
+            <span id="current-date">March 20, 2025</span>
+          </div>
+        </header>
+
+        <!-- Transaction Controls -->
+        <section class="transaction-controls">
+          <button id="add-transaction-btn" class="btn primary">
+            <i class="fas fa-plus"></i> Add New Transaction
+          </button>
+
+          <div class="search-filter-container">
+            <div class="search-box">
+              <i class="fas fa-search search-icon"></i>
+              <input
+                type="text"
+                id="search-transactions"
+                placeholder="Search transactions..."
+              />
+            </div>
+
+            <div class="filter-controls">
+              <div class="filter-group">
+                <label for="filter-type">Type</label>
+                <select id="filter-type" class="filter-select">
+                  <option value="all">All Types</option>
+                  <option value="income">Income</option>
+                  <option value="expense">Expense</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label for="filter-category">Category</label>
+                <select id="filter-category" class="filter-select">
+                  <option value="all">All Categories</option>
+                  <!-- Categories will be populated by JavaScript -->
+                </select>
+              </div>
+
+              <div class="filter-group date-range">
+                <label for="filter-date-from">Date Range</label>
+                <div class="date-inputs">
+                  <input type="date" id="filter-date-from" class="date-input" />
+                  <span class="date-separator">to</span>
+                  <input type="date" id="filter-date-to" class="date-input" />
+                </div>
+              </div>
+
+              <button id="apply-filters" class="btn">Apply Filters</button>
+              <button id="clear-filters" class="btn secondary">Clear</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Transaction Form Modal -->
+        <div id="transaction-modal" class="modal">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h3 id="transaction-form-title">Add New Transaction</h3>
+              <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+              <form id="transaction-form">
+                <input type="hidden" id="transaction-id" />
+
+                <div class="form-group">
+                  <label for="transaction-type">Transaction Type</label>
+                  <div class="type-selector">
+                    <div class="type-option">
+                      <input
+                        type="radio"
+                        id="type-income"
+                        name="transaction-type"
+                        value="income"
+                        checked
+                      />
+                      <label for="type-income" class="type-label income">
+                        <i class="fas fa-arrow-down"></i> Income
+                      </label>
+                    </div>
+                    <div class="type-option">
+                      <input
+                        type="radio"
+                        id="type-expense"
+                        name="transaction-type"
+                        value="expense"
+                      />
+                      <label for="type-expense" class="type-label expense">
+                        <i class="fas fa-arrow-up"></i> Expense
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="transaction-amount">Amount</label>
+                  <div class="amount-input">
+                    <span class="currency-symbol">₹</span>
+                    <input
+                      type="number"
+                      id="transaction-amount"
+                      placeholder="0.00"
+                      step="0.01"
+                      min="0"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="transaction-date">Date</label>
+                  <input type="date" id="transaction-date" required />
+                </div>
+
+                <div class="form-group">
+                  <label for="transaction-description">Description</label>
+                  <input
+                    type="text"
+                    id="transaction-description"
+                    placeholder="Enter description"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="transaction-category">Category</label>
+                  <select id="transaction-category" required>
+                    <!-- Categories will be populated by JavaScript based on transaction type -->
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="transaction-notes">Notes (Optional)</label>
+                  <textarea
+                    id="transaction-notes"
+                    placeholder="Add any additional notes"
+                  ></textarea>
+                </div>
+
+                <div class="form-actions">
+                  <button
+                    type="submit"
+                    id="save-transaction"
+                    class="btn primary"
+                  >
+                    Save Transaction
+                  </button>
+                  <button
+                    type="button"
+                    id="cancel-transaction"
+                    class="btn secondary"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transaction List -->
+        <section class="transaction-list-section">
+          <div class="transaction-summary">
+            <div class="summary-item">
+              <span class="summary-label">Total Income:</span>
+              <span class="summary-value income" id="summary-income"
+                >₹0.00</span
+              >
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Total Expenses:</span>
+              <span class="summary-value expense" id="summary-expenses"
+                >₹0.00</span
+              >
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Balance:</span>
+              <span class="summary-value" id="summary-balance">₹0.00</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Transactions:</span>
+              <span class="summary-value" id="transaction-count">0</span>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="transactions-table">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="date">
+                    Date <i class="fas fa-sort"></i>
+                  </th>
+                  <th>Description</th>
+                  <th class="sortable" data-sort="category">
+                    Category <i class="fas fa-sort"></i>
+                  </th>
+                  <th class="sortable" data-sort="amount">
+                    Amount <i class="fas fa-sort"></i>
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="transactions-table-body">
+                <!-- Transactions will be populated by JavaScript -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pagination">
+            <button id="prev-page" class="btn pagination-btn" disabled>
+              <i class="fas fa-chevron-left"></i> Previous
+            </button>
+            <div id="page-indicators">
+              <span class="current-page"
+                >Page <span id="current-page-num">1</span> of
+                <span id="total-pages">1</span></span
+              >
+            </div>
+            <button id="next-page" class="btn pagination-btn" disabled>
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+      <div class="modal-content confirm-content">
+        <div class="modal-header">
+          <h3>Confirm Delete</h3>
+          <span class="close-modal">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p>
+            Are you sure you want to delete this transaction? This action cannot
+            be undone.
+          </p>
+          <div class="confirm-actions">
+            <button id="confirm-delete" class="btn danger">Delete</button>
+            <button id="cancel-delete" class="btn secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/transactions.js"></script>
+    <script src="js/theme-loader.js"></script>
+  </body>
+</html>
