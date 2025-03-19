@@ -134,3 +134,5 @@ const App = (function(StorageCtrl, UICtrl) {
 
 // Initialize the application when the DOM is loaded
 document.addEventListener('DOMContentLoaded', App.init);
+
+

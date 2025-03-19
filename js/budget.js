@@ -851,3 +851,5 @@ StorageCtrl.deleteBudget = function (id) {
 
 // Initialize the application when the DOM is loaded
 document.addEventListener("DOMContentLoaded", BudgetCtrl.init);
+
+// Apply settings on page load

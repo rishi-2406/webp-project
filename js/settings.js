@@ -159,7 +159,11 @@ const SettingsCtrl = (function (StorageCtrl, UICtrl) {
   const applyCurrentSettings = function () {
     // Apply theme
     const theme = settings.theme || defaultSettings.theme;
-    document.body.className = theme === "dark" ? "dark-theme" : "";
+    if (theme === "dark") {
+      document.body.classList.add("dark-theme");
+    } else {
+      document.body.classList.remove("dark-theme");
+    }
 
     // Apply font size
     const fontSize = settings.fontSize || defaultSettings.fontSize;
@@ -420,16 +424,20 @@ const SettingsCtrl = (function (StorageCtrl, UICtrl) {
   // Export all data
   const exportData = function () {
     try {
-        // Gather all data
-        const data = {
-            settings: settings,
-            incomeCategories: incomeCategories,
-            expenseCategories: expenseCategories,
-            transactions: StorageCtrl.getTransactions ? StorageCtrl.getTransactions() : [],
-            budgets: StorageCtrl.getBudgets ? StorageCtrl.getBudgets() : [],
-            goals: StorageCtrl.getGoals ? StorageCtrl.getGoals() : [],
-            subscriptions: StorageCtrl.getSubscriptions ? StorageCtrl.getSubscriptions() : []
-        };
+      // Gather all data
+      const data = {
+        settings: settings,
+        incomeCategories: incomeCategories,
+        expenseCategories: expenseCategories,
+        transactions: StorageCtrl.getTransactions
+          ? StorageCtrl.getTransactions()
+          : [],
+        budgets: StorageCtrl.getBudgets ? StorageCtrl.getBudgets() : [],
+        goals: StorageCtrl.getGoals ? StorageCtrl.getGoals() : [],
+        subscriptions: StorageCtrl.getSubscriptions
+          ? StorageCtrl.getSubscriptions()
+          : [],
+      };
 
       // Convert to JSON
       const jsonData = JSON.stringify(data, null, 2);
@@ -808,3 +816,4 @@ StorageCtrl.setSubscriptions = function (subscriptions) {
 
 // Initialize the application when the DOM is loaded
 document.addEventListener("DOMContentLoaded", SettingsCtrl.init);
+

@@ -801,3 +801,4 @@ const ReportsCtrl = (function (StorageCtrl, UICtrl) {
 
 // Initialize the application when the DOM is loaded
 document.addEventListener("DOMContentLoaded", ReportsCtrl.init);
+

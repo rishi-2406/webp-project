@@ -1249,3 +1249,4 @@ StorageCtrl.deleteSubscription = function (id) {
 
 // Initialize the application when the DOM is loaded
 document.addEventListener("DOMContentLoaded", GoalsCtrl.init);
+
