@@ -154,8 +154,7 @@ The project is organized as follows:
 ## Installation and Usage
 
 1. Clone the repository:
-
-git clone https://github.com/yourusername/fintrack.git
+    git clone https://github.com/yourusername/fintrack.git
 
 2. Open index.html in your web browser to launch the application.
 
