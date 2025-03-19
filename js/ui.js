@@ -3,10 +3,13 @@ const UICtrl = (function () {
   // Private variables and methods
 
   // Updated formatCurrency: converts the amount to a number, defaulting to 0 if invalid.
-  const formatCurrency = function (amount) {
-    const num = parseFloat(amount) || 0;
-    return num.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,");
-  };
+const formatCurrency = function(amount) {
+    // Check if amount is undefined or not a number
+    if (amount === undefined || isNaN(amount)) {
+        return "0.00";
+    }
+    return amount.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,');
+};
 
   const formatDate = function (dateString) {
     const date = new Date(dateString);
@@ -105,54 +108,48 @@ const UICtrl = (function () {
     },
 
     // Update budget progress section
-    updateBudgetProgress: function (budgets, currentMonthExpenses) {
-      const budgetContainer = document.getElementById(
-        "budget-categories-container"
-      );
-      budgetContainer.innerHTML = "";
-
-      budgets.forEach((budget) => {
+// In ui.js
+updateBudgetProgress: function(budgets, currentMonthExpenses) {
+    const budgetContainer = document.getElementById('budget-categories-container');
+    budgetContainer.innerHTML = '';
+    
+    budgets.forEach(budget => {
         // Calculate total spent in this category
         const categoryExpenses = currentMonthExpenses
-          .filter((expense) => expense.category === budget.category)
-          .reduce((total, expense) => total + expense.amount, 0);
-
-        const percentSpent = (categoryExpenses / budget.limit) * 100;
-        let statusClass = "good";
-
+            .filter(expense => expense.category === budget.category)
+            .reduce((total, expense) => {
+                // Ensure expense.amount is a number
+                const amount = parseFloat(expense.amount) || 0;
+                return total + amount;
+            }, 0);
+        
+        const percentSpent = (categoryExpenses / budget.amount) * 100;
+        let statusClass = 'good';
+        
         if (percentSpent >= 90) {
-          statusClass = "danger";
+            statusClass = 'danger';
         } else if (percentSpent >= 70) {
-          statusClass = "warning";
+            statusClass = 'warning';
         }
-
-        const budgetElement = document.createElement("div");
-        budgetElement.className = "budget-category";
+        
+        const budgetElement = document.createElement('div');
+        budgetElement.className = 'budget-category';
         budgetElement.innerHTML = `
-                    <div class="budget-category-header">
-                        <div class="budget-category-name">${
-                          budget.category
-                        }</div>
-                        <div class="budget-values">
-                            <div class="budget-spent">₹${formatCurrency(
-                              categoryExpenses
-                            )}</div>
-                            <div class="budget-limit">/ ₹${formatCurrency(
-                              budget.limit
-                            )}</div>
-                        </div>
-                    </div>
-                    <div class="budget-progress-bar">
-                        <div class="budget-progress-fill ${statusClass}" style="width: ${Math.min(
-          percentSpent,
-          100
-        )}%"></div>
-                    </div>
-                `;
-
+            <div class="budget-category-header">
+                <div class="budget-category-name">${budget.category}</div>
+                <div class="budget-values">
+                    <div class="budget-spent">₹${formatCurrency(categoryExpenses)}</div>
+                    <div class="budget-limit">/ ₹${formatCurrency(budget.amount)}</div>
+                </div>
+            </div>
+            <div class="budget-progress-bar">
+                <div class="budget-progress-fill ${statusClass}" style="width: ${Math.min(percentSpent, 100)}%"></div>
+            </div>
+        `;
+        
         budgetContainer.appendChild(budgetElement);
-      });
-    },
+    });
+},
 
     // Update financial health indicators
     updateFinancialHealth: function (income, expenses) {
