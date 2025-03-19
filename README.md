@@ -62,7 +62,6 @@
 
 **FinTrack** is a comprehensive personal finance management web application built with **HTML**, **CSS**, and **JavaScript**. It helps you track expenses, manage budgets, set financial goals, and gain insights into your spending habits.
 
-![FinTrack Logo](assets/icons/logo.png "FinTrack Logo")
 
 ---
 
